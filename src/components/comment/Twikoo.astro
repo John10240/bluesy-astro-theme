@@ -1,0 +1,198 @@
+---
+import { commentConfig } from "@/config/commentConfig";
+import { url } from "@/utils/url-utils";
+
+interface Props {
+	path: string;
+}
+
+const twikooConfig = commentConfig.twikoo ?? { envId: "" };
+const jsUrl =
+	twikooConfig.jsUrl ||
+	"https://registry.npmmirror.com/twikoo/1.7.13/files/dist/twikoo.min.js";
+const baseCssUrl =
+	twikooConfig.baseCssUrl ||
+	"https://cdn.jsdelivr.net/npm/twikoo@1.7.13/dist/twikoo.css";
+const cssUrl = twikooConfig.cssUrl
+	? twikooConfig.cssUrl.startsWith("http")
+		? twikooConfig.cssUrl
+		: url(twikooConfig.cssUrl)
+	: "";
+const config = {
+	...twikooConfig,
+	el: "#tcomment",
+	path: Astro.props.path,
+};
+---
+
+<div id="tcomment" aria-busy="true">
+	<p class="text-sm text-(--content-meta)">评论加载中…</p>
+</div>
+<script is:inline define:vars={{ config, jsUrl, baseCssUrl, cssUrl }}>
+  // 获取当前页面路径
+  function getCurrentPath() {
+    const pathname = window.location.pathname;
+    return pathname.endsWith("/") && pathname.length > 1
+      ? pathname.slice(0, -1)
+      : pathname;
+  }
+
+  // 动态创建配置对象
+  function createTwikooConfig() {
+    return {
+      ...config,
+      path: getCurrentPath(),
+      el: "#tcomment",
+    };
+  }
+
+  function applyTwikooAccessibility() {
+    const commentEl = document.getElementById("tcomment");
+    if (!commentEl) return;
+
+    const textarea = commentEl.querySelector("textarea");
+    textarea?.setAttribute("aria-label", "评论内容");
+
+    const markdownHelpLink = commentEl.querySelector("a.tk-submit-action-icon.__markdown");
+    markdownHelpLink?.setAttribute("aria-label", "查看 Markdown 语法说明");
+  }
+
+	function loadStylesheet(href, selector, attribute) {
+		let stylesheet = document.querySelector(selector);
+		if (!stylesheet) {
+			stylesheet = document.createElement("link");
+			stylesheet.rel = "stylesheet";
+			stylesheet.href = href;
+			stylesheet.setAttribute(attribute, "true");
+			document.head.appendChild(stylesheet);
+		}
+
+		if (stylesheet.sheet) return Promise.resolve();
+		return new Promise((resolve, reject) => {
+			stylesheet.addEventListener("load", resolve, { once: true });
+			stylesheet.addEventListener(
+				"error",
+				() => reject(new Error("Failed to load Twikoo styles.")),
+				{ once: true },
+			);
+		});
+	}
+
+	function loadTwikooStyles() {
+		// Twikoo JS 会把基础样式作为动态 <style> 插入 head；Swup 换页会删除它们。
+		// 将基础 CSS 作为独立 link 恢复，cssUrl 则继续作为站点主题覆盖层。
+		const styles = [
+			loadStylesheet(
+				baseCssUrl,
+				'link[data-twikoo-base-styles]',
+				"data-twikoo-base-styles",
+			),
+		];
+		if (cssUrl) {
+			styles.push(
+				loadStylesheet(
+					cssUrl,
+					'link[data-twikoo-styles]',
+					"data-twikoo-styles",
+				),
+			);
+		}
+		return Promise.all(styles);
+	}
+
+	function loadTwikooScript() {
+		if (typeof twikoo !== "undefined") return Promise.resolve();
+
+		if (!window.__fireflyTwikooScriptPromise) {
+			window.__fireflyTwikooScriptPromise = new Promise((resolve, reject) => {
+				const existing = document.querySelector('script[data-twikoo-script]');
+				const script = existing || document.createElement("script");
+
+				const handleLoad = () => {
+					if (typeof twikoo === "undefined") {
+						reject(new Error("Twikoo loaded without exposing its global API."));
+						return;
+					}
+					resolve();
+				};
+				const handleError = () => reject(new Error("Failed to load Twikoo."));
+
+				script.addEventListener("load", handleLoad, { once: true });
+				script.addEventListener("error", handleError, { once: true });
+
+				if (!existing) {
+					script.src = jsUrl;
+					script.async = true;
+					script.dataset.twikooScript = "true";
+					document.head.appendChild(script);
+				}
+			});
+		}
+
+		return window.__fireflyTwikooScriptPromise;
+	}
+
+  // 初始化 Twikoo
+	async function initTwikoo(commentEl = document.getElementById("tcomment")) {
+		if (!commentEl || commentEl.dataset.twikooInitialized === "true") return;
+
+		commentEl.dataset.twikooInitialized = "true";
+		try {
+			await Promise.all([loadTwikooStyles(), loadTwikooScript()]);
+			// 切页期间旧容器会被移除；不能让它继续向新页面的 #tcomment 挂载。
+			if (!commentEl.isConnected || document.getElementById("tcomment") !== commentEl) {
+				return;
+			}
+			commentEl.innerHTML = "";
+			await twikoo.init(createTwikooConfig());
+      commentEl.setAttribute("aria-busy", "false");
+      applyTwikooAccessibility();
+    } catch (error) {
+      commentEl.dataset.twikooInitialized = "false";
+      commentEl.setAttribute("aria-busy", "false");
+      commentEl.textContent = "评论加载失败，请刷新后重试。";
+      console.error("[Twikoo] 初始化失败:", error);
+    }
+  }
+
+  function observeTwikoo() {
+    const commentEl = document.getElementById("tcomment");
+    if (!commentEl || commentEl.dataset.twikooObserved === "true") return;
+
+    commentEl.dataset.twikooObserved = "true";
+    if (!("IntersectionObserver" in window)) {
+      void initTwikoo();
+      return;
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      if (!entries.some((entry) => entry.isIntersecting)) return;
+      observer.disconnect();
+      void initTwikoo();
+    }, { rootMargin: "320px 0px" });
+
+    observer.observe(commentEl);
+  }
+
+	// 只绑定一次。后续 Swup 插入的同一段内联脚本不能在 content:replace 阶段
+	// 立即观察评论区，必须等待 Layout 发出的 firefly:page:loaded 事件。
+	if (!window.__fireflyTwikooLifecycleBound) {
+		window.__fireflyTwikooLifecycleBound = true;
+		document.addEventListener("firefly:page:loaded", () => {
+			if (!document.getElementById("tcomment")) return;
+
+			// Swup 完成替换后先把可能被移除的样式重新挂回 head，
+			// 再观察评论区，避免 Twikoo 在无样式状态下渲染。
+			void loadTwikooStyles()
+				.then(observeTwikoo)
+				.catch((error) => console.error("[Twikoo] 样式加载失败:", error));
+		});
+
+		// 首次打开页面时，评论区接近视口才加载 Twikoo 与其 Turnstile 依赖。
+		if (document.readyState === "loading") {
+			document.addEventListener("DOMContentLoaded", observeTwikoo, { once: true });
+		} else {
+			observeTwikoo();
+		}
+	}
+</script>

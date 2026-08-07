@@ -1,0 +1,9 @@
+{
+	"name": "example-blog-template",
+	"compatibility_date": "2025-01-01",
+	"compatibility_flags": ["nodejs_compat"],
+	"assets": {
+		"directory": "./dist",
+		"not_found_handling": "404-page"
+	}
+}

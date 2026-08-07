@@ -1,0 +1,68 @@
+---
+
+import { getEntry, render } from "astro:content";
+import Markdown from "@components/common/Markdown.astro";
+import Comment from "@components/comment/index.astro";
+import { Icon } from "astro-icon/components";
+import I18nKey from "@/i18n/i18nKey";
+import { i18n } from "@/i18n/translation";
+import MainGridLayout from "@/layouts/MainGridLayout.astro";
+import { formatDateTimeToYYYYMMDDHHmm } from "@/utils/date-utils";
+
+const logger = console;
+const aboutPost = await getEntry("spec", "about");
+
+if (!aboutPost) {
+	throw new Error("About page content not found");
+}
+
+/*
+ * ========================================================================
+ * 步骤1：读取关于页内容更新时间
+ * ========================================================================
+ * 目标：让生产环境稳定显示内容更新时间，不受部署检出时间影响
+ * 数据源：src/content/spec/about.md 的 Frontmatter
+ * 操作：
+ * 1) 读取 updated 字段
+ * 2) 校验字段存在后供页面展示
+ */
+logger.info("开始读取关于页内容更新时间...");
+
+// 1.1 读取 about.md 中可跨部署保留的更新时间
+const aboutUpdatedAt = aboutPost.data.updated;
+if (!aboutUpdatedAt) {
+	throw new Error("About page updated time not found");
+}
+logger.info("关于页内容更新时间读取完成: %s", aboutUpdatedAt.toISOString());
+
+const { Content } = await render(aboutPost);
+---
+<MainGridLayout title={i18n(I18nKey.about)} description={i18n(I18nKey.about)}>
+    <div class="flex w-full rounded-(--radius-large) overflow-hidden relative min-h-32">
+	        <div class="card-base z-10 px-9 py-6 relative w-full ">
+	            <Markdown class="mt-2">
+	                <Content />
+	            </Markdown>
+	            <div class="mt-6 rounded-xl onload-animation">
+	                <div class="p-6 bg-(--license-block-bg) rounded-xl">
+	                    <div class="flex items-center gap-3">
+	                        <div class="h-12 w-12 rounded-lg bg-(--primary) flex items-center justify-center text-white dark:text-black/70 shrink-0">
+	                            <Icon is:inline name="material-symbols:update" class="text-2xl" />
+	                        </div>
+	                        <div>
+	                            <h2 class="text-lg font-semibold text-neutral-900 dark:text-neutral-100 mb-1">
+	                                {i18n(I18nKey.updatedAt)}
+	                            </h2>
+	                            <time datetime={aboutUpdatedAt.toISOString()} class="text-sm text-neutral-600 dark:text-neutral-400">
+	                                {formatDateTimeToYYYYMMDDHHmm(aboutUpdatedAt)}
+	                            </time>
+	                        </div>
+	                    </div>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="mt-4">
+        <Comment post={aboutPost} customPath="/about" title={i18n(I18nKey.about)} />
+    </div>
+</MainGridLayout>
