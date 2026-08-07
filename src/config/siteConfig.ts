@@ -12,7 +12,7 @@ export const siteConfig: SiteConfig = {
 	subtitle: "A reusable Astro blog template.",
 
 	// 站点 URL
-	site_url: "https://xx.qiui.workers.dev",
+	site_url: "https://bluesy-an-astro-blog-template.qiui.workers.dev",
 
 	// 站点描述
 	description: "An example site built from a reusable blog template.",

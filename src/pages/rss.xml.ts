@@ -53,7 +53,7 @@ export async function GET(context: APIContext) {
 	return rss({
 		title: siteConfig.title,
 		description: siteConfig.subtitle || "No description",
-		site: context.site ?? "https://xx.qiui.workers.dev",
+		site: context.site ?? "https://bluesy-an-astro-blog-template.qiui.workers.dev",
 		customData: `<templateTheme>Bluesy-An-Astro-Blog-Template</templateTheme>
 		<templateThemeVersion>${pkg.version}</templateThemeVersion>
 		<templateThemeUrl>https://github.com/John10240/Bluesy-An-Astro-Blog-Template</templateThemeUrl>

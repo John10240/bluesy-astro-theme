@@ -2,7 +2,7 @@
 
 这是一个面向 **Cloudflare Workers Static Assets** 部署的 Astro 博客模板，使用 Astro 7、Svelte 5、Tailwind CSS 4 和 pnpm 构建，支持 Markdown/MDX 内容、Pagefind 搜索、响应式布局及多种可选扩展。
 
-- 在线预览：<https://xx.qiui.workers.dev>
+- 在线预览：<https://bluesy-an-astro-blog-template.qiui.workers.dev>
 - GitHub 仓库：<https://github.com/John10240/Bluesy-An-Astro-Blog-Template>
 - 一键部署：[Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/John10240/Bluesy-An-Astro-Blog-Template)
 
@@ -130,7 +130,7 @@ pnpm exec wrangler deploy
 
 仓库同时保留 GitHub Pages 和 Vercel 的示例配置，但 Cloudflare Workers 是本模板优先说明和验证的部署方式。
 
-部署后可通过 Cloudflare 分配的 `https://<WORKER_NAME>.<ACCOUNT_SUBDOMAIN>.workers.dev` 地址访问。当前模板暂时使用 <https://xx.qiui.workers.dev> 作为在线预览地址；它是已部署站点地址，不是 Cloudflare 的版本 Preview URL。
+部署后可通过 Cloudflare 分配的 `https://<WORKER_NAME>.<ACCOUNT_SUBDOMAIN>.workers.dev` 地址访问。当前模板使用 <https://bluesy-an-astro-blog-template.qiui.workers.dev> 作为在线预览地址；它是已部署站点地址，不是 Cloudflare 的版本 Preview URL。
 
 ### Cloudflare 官方文档
 
