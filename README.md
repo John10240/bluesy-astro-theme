@@ -4,9 +4,6 @@
 
 - 在线预览：<https://bluesy-an-astro-blog-template.qiui.workers.dev>
 - GitHub 仓库：<https://github.com/John10240/Bluesy-An-Astro-Blog-Template>
-- 一键部署：[Deploy to Cloudflare](https://deploy.workers.cloudflare.com/?url=https://github.com/John10240/Bluesy-An-Astro-Blog-Template)
-
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/John10240/Bluesy-An-Astro-Blog-Template)
 
 评论、统计、赞助、广告、音乐、追番和看板娘等第三方功能默认关闭，可按需填写自己的配置后启用。
 
@@ -77,25 +74,7 @@ draft: false
 
 Workers Builds 会安装依赖、生成 `dist/`，再把静态资源发布到 Cloudflare Workers。连接自己的 Fork 后，生产分支的新提交可以继续触发自动构建和部署。
 
-### 方法二：Deploy to Cloudflare 快速部署
-
-点击下面的官方按钮：
-
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/John10240/Bluesy-An-Astro-Blog-Template)
-
-该按钮的链接硬编码指向本模板仓库，不会自动改为或连接你已有的 Fork。它适合按 Cloudflare 引导快速复制模板并部署；若要明确维护自己的仓库，优先使用方法一。
-
-Cloudflare 通常会引导你完成以下流程：
-
-1. 登录 Cloudflare，并将模板仓库复制到自己的 GitHub 账户。
-2. 确认新仓库名称、生产分支和 Worker 名称。
-3. 确认构建命令为 `pnpm build`。
-4. 确认部署命令为 `npx wrangler deploy`。
-5. 保存并部署。Workers Builds 会安装依赖、生成 `dist/`，再把其中的静态资源发布到 Cloudflare Workers。
-
-一键部署要求源仓库保持公开。
-
-### 方法三：使用 Wrangler CLI
+### 方法二：使用 Wrangler CLI
 
 克隆并安装依赖：
 
