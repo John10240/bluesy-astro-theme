@@ -53,10 +53,10 @@ export async function GET(context: APIContext) {
 	return rss({
 		title: siteConfig.title,
 		description: siteConfig.subtitle || "No description",
-		site: context.site ?? "https://example.com",
-		customData: `<templateTheme>Example Blog Template</templateTheme>
+		site: context.site ?? "https://xx.qiui.workers.dev",
+		customData: `<templateTheme>Bluesy-An-Astro-Blog-Template</templateTheme>
 		<templateThemeVersion>${pkg.version}</templateThemeVersion>
-		<templateThemeUrl>https://example.com</templateThemeUrl>
+		<templateThemeUrl>https://github.com/John10240/Bluesy-An-Astro-Blog-Template</templateThemeUrl>
 		<lastBuildDate>${formatDateI18nWithTime(new Date())}</lastBuildDate>`,
 		items: feedItems,
 	});

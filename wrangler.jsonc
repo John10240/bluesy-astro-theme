@@ -1,5 +1,5 @@
 {
-	"name": "example-blog-template",
+	"name": "bluesy-an-astro-blog-template",
 	"compatibility_date": "2025-01-01",
 	"compatibility_flags": ["nodejs_compat"],
 	"assets": {

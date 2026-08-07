@@ -6,13 +6,13 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Example Blog",
+	title: "Bluesy-An-Astro-Blog-Template",
 
 	// 站点副标题
 	subtitle: "A reusable Astro blog template.",
 
 	// 站点 URL
-	site_url: "https://example.com",
+	site_url: "https://xx.qiui.workers.dev",
 
 	// 站点描述
 	description: "An example site built from a reusable blog template.",
