@@ -8,7 +8,7 @@
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/John10240/Bluesy-An-Astro-Blog-Template)
 
-仓库已经移除原站的个人文章、媒体和服务配置，只保留匿名示例内容。评论、统计、赞助、广告、音乐、追番和看板娘等第三方功能默认关闭，可按需填写自己的配置后启用。
+评论、统计、赞助、广告、音乐、追番和看板娘等第三方功能默认关闭，可按需填写自己的配置后启用。
 
 ## 项目来源
 
@@ -47,7 +47,7 @@ pnpm build
 
 ## 评论方案
 
-Astro 官方没有内置评论系统，可在 [Astro Integrations Directory](https://astro.build/integrations/?search=comments) 查找社区方案。对于当前静态博客，推荐目录收录的 JamComments 集成包 [`@jam-comments/astro`](https://jamcomments.com/docs/integrations/astro)。本项目没有内置该包，现有评论功能仍默认关闭，请按所选方案的文档自行安装和配置。
+本模板的评论功能默认关闭，推荐按需选择 [Waline](https://waline.js.org/) 或 [Twikoo](https://twikoo.js.org/)。在 `src/config/commentConfig.ts` 中填写对应服务配置，并将 `type` 改为 `"waline"` 或 `"twikoo"` 后即可启用。
 
 ## 文章示例
 
