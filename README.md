@@ -12,12 +12,7 @@
 
 ## 项目来源
 
-本模板是 [John10240/Firefly-astro-blog](https://github.com/John10240/Firefly-astro-blog) 的脱敏、通用化版本。
-
-项目的主题演变关系如下：
-
-1. 本模板所基于的博客项目是在 [Firefly](https://github.com/CuteLeaf/Firefly) 基础上修改而来，Firefly 由 **CuteLeaf** 维护。
-2. Firefly 本身是基于 [fuwari](https://github.com/saicaca/fuwari) 的二次开发，fuwari 的原作者为 **saicaca**。
+本模板基于 **CuteLeaf** 维护的 [Firefly](https://github.com/CuteLeaf/Firefly) 修改而来；Firefly 则基于 **saicaca** 的 [fuwari](https://github.com/saicaca/fuwari) 二次开发。
 
 感谢 CuteLeaf 和 saicaca 的开源工作。各项目的版权归属以其原仓库和许可证为准。
 
@@ -50,6 +45,10 @@ pnpm build
 
 模板中的站点身份均为占位内容。正式发布前，请搜索并替换 `example.com`、`Demo Author` 和 `example@example.com`。
 
+## 评论方案
+
+Astro 官方没有内置评论系统，可在 [Astro Integrations Directory](https://astro.build/integrations/?search=comments) 查找社区方案。对于当前静态博客，推荐目录收录的 JamComments 集成包 [`@jam-comments/astro`](https://jamcomments.com/docs/integrations/astro)。本项目没有内置该包，现有评论功能仍默认关闭，请按所选方案的文档自行安装和配置。
+
 ## 文章示例
 
 ```yaml
@@ -69,13 +68,24 @@ draft: false
 
 本模板的主要部署目标是 **Cloudflare Workers Static Assets**。`wrangler.jsonc` 已将 Astro 的构建目录 `dist/` 配置为静态资源目录，并启用了 `nodejs_compat`；找不到资源时会使用构建生成的 404 页面。
 
-### 方法一：一键部署
+### 方法一：Fork 后连接 Cloudflare（推荐）
+
+1. 在 GitHub 上 Fork 本仓库到自己的账户，仓库地址应类似 `https://github.com/<GITHUB_USERNAME>/Bluesy-An-Astro-Blog-Template`。
+2. 在自己的 Fork 中修改 `src/config/siteConfig.ts`、`src/config/profileConfig.ts` 和 `wrangler.jsonc` 等必要配置并提交。
+3. 在 Cloudflare 控制台创建 Worker，选择导入或连接 Git 仓库，并授权访问自己的 Fork，不要选择原模板仓库。
+4. 将构建命令设为 `pnpm build`，部署命令设为 `npx wrangler deploy`，然后保存并部署。
+
+Workers Builds 会安装依赖、生成 `dist/`，再把静态资源发布到 Cloudflare Workers。连接自己的 Fork 后，生产分支的新提交可以继续触发自动构建和部署。
+
+### 方法二：Deploy to Cloudflare 快速部署
 
 点击下面的官方按钮：
 
 [![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/John10240/Bluesy-An-Astro-Blog-Template)
 
-Cloudflare 会引导你完成以下流程：
+该按钮的链接硬编码指向本模板仓库，不会自动改为或连接你已有的 Fork。它适合按 Cloudflare 引导快速复制模板并部署；若要明确维护自己的仓库，优先使用方法一。
+
+Cloudflare 通常会引导你完成以下流程：
 
 1. 登录 Cloudflare，并将模板仓库复制到自己的 GitHub 账户。
 2. 确认新仓库名称、生产分支和 Worker 名称。
@@ -83,14 +93,14 @@ Cloudflare 会引导你完成以下流程：
 4. 确认部署命令为 `npx wrangler deploy`。
 5. 保存并部署。Workers Builds 会安装依赖、生成 `dist/`，再把其中的静态资源发布到 Cloudflare Workers。
 
-一键部署要求源仓库保持公开。完成首次部署后，生产分支的新提交可以继续触发自动构建和部署。
+一键部署要求源仓库保持公开。
 
-### 方法二：使用 Wrangler CLI
+### 方法三：使用 Wrangler CLI
 
 克隆并安装依赖：
 
 ```bash
-git clone https://github.com/John10240/Bluesy-An-Astro-Blog-Template.git
+git clone https://github.com/<GITHUB_USERNAME>/Bluesy-An-Astro-Blog-Template.git
 cd Bluesy-An-Astro-Blog-Template
 pnpm install --frozen-lockfile
 ```
