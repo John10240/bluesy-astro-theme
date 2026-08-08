@@ -1,9 +1,9 @@
-# Bluesy-An-Astro-Blog-Template
+# bluesy-astro-theme
 
 这是一个面向 **Cloudflare Workers Static Assets** 部署的 Astro 博客模板，使用 Astro 7、Svelte 5、Tailwind CSS 4 和 pnpm 构建，支持 Markdown/MDX 内容、Pagefind 搜索、响应式布局及多种可选扩展。
 
-- 在线预览：<https://bluesy-an-astro-blog-template.qiui.workers.dev>
-- GitHub 仓库：<https://github.com/John10240/Bluesy-An-Astro-Blog-Template>
+- 在线预览：<https://bluesy-astro-theme.qiui.workers.dev>
+- GitHub 仓库：<https://github.com/John10240/bluesy-astro-theme>
 
 评论、统计、赞助、广告、音乐、追番和看板娘等第三方功能默认关闭，可按需填写自己的配置后启用。
 
@@ -67,7 +67,7 @@ draft: false
 
 ### 方法一：Fork 后连接 Cloudflare（推荐）
 
-1. 在 GitHub 上 Fork 本仓库到自己的账户，仓库地址应类似 `https://github.com/<GITHUB_USERNAME>/Bluesy-An-Astro-Blog-Template`。
+1. 在 GitHub 上 Fork 本仓库到自己的账户，仓库地址应类似 `https://github.com/<GITHUB_USERNAME>/bluesy-astro-theme`。
 2. 在自己的 Fork 中修改 `src/config/siteConfig.ts`、`src/config/profileConfig.ts` 和 `wrangler.jsonc` 等必要配置并提交。
 3. 在 Cloudflare 控制台创建 Worker，选择导入或连接 Git 仓库，并授权访问自己的 Fork，不要选择原模板仓库。
 4. 将构建命令设为 `pnpm build`，部署命令设为 `npx wrangler deploy`，然后保存并部署。
@@ -79,8 +79,8 @@ Workers Builds 会安装依赖、生成 `dist/`，再把静态资源发布到 Cl
 克隆并安装依赖：
 
 ```bash
-git clone https://github.com/<GITHUB_USERNAME>/Bluesy-An-Astro-Blog-Template.git
-cd Bluesy-An-Astro-Blog-Template
+git clone https://github.com/<GITHUB_USERNAME>/bluesy-astro-theme.git
+cd bluesy-astro-theme
 pnpm install --frozen-lockfile
 ```
 
@@ -119,7 +119,7 @@ pnpm exec wrangler deploy
 
 仓库同时保留 GitHub Pages 和 Vercel 的示例配置，但 Cloudflare Workers 是本模板优先说明和验证的部署方式。
 
-部署后可通过 Cloudflare 分配的 `https://<WORKER_NAME>.<ACCOUNT_SUBDOMAIN>.workers.dev` 地址访问。当前模板使用 <https://bluesy-an-astro-blog-template.qiui.workers.dev> 作为在线预览地址；它是已部署站点地址，不是 Cloudflare 的版本 Preview URL。
+部署后可通过 Cloudflare 分配的 `https://<WORKER_NAME>.<ACCOUNT_SUBDOMAIN>.workers.dev` 地址访问。当前模板使用 <https://bluesy-astro-theme.qiui.workers.dev> 作为在线预览地址；它是已部署站点地址，不是 Cloudflare 的版本 Preview URL。
 
 ### Cloudflare 官方文档
 

@@ -2,15 +2,8 @@
 	"name": "bluesy-an-astro-blog-template",
 	"compatibility_date": "2025-01-01",
 	"compatibility_flags": ["nodejs_compat"],
-	// 自己的域名设置好后如果要关闭worke.de的默认域名就取消注释下面的配置
-	// "workers_dev": false,
+	// "workers_dev": false,  
 	// "preview_urls": false,
-	// "routes": [
-	// 	{
-	// 		"pattern": "example.com",   // 修改为自己的域名
-	// 		"custom_domain": true
-	// 	}
-	// ],
 	"assets": {
 		"directory": "./dist",
 		"not_found_handling": "404-page"
