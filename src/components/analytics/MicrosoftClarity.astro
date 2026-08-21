@@ -1,0 +1,90 @@
+---
+interface Props {
+	clarityId: string;
+}
+
+const { clarityId } = Astro.props;
+---
+
+<script is:inline data-swup-ignore-script data-clarity-id={clarityId}>
+	(function () {
+		var currentScript = document.currentScript;
+		var clarityId = currentScript && currentScript.dataset.clarityId;
+
+		function isClarityScript(script) {
+			if (!script || !script.src) return false;
+			try {
+				var url = new URL(script.src, window.location.href);
+				return url.hostname === "clarity.ms" || url.hostname.endsWith(".clarity.ms");
+			} catch (_) {
+				return script.src.includes("clarity.ms/");
+			}
+		}
+
+		function ignoreClarityScript(script) {
+			if (!isClarityScript(script)) return;
+			script.setAttribute("data-swup-ignore-script", "");
+		}
+
+		function ignoreClarityScripts() {
+			Array.from(document.scripts).forEach(ignoreClarityScript);
+		}
+
+		ignoreClarityScripts();
+
+		if (!window.__fireflyClarityScriptObserver) {
+			window.__fireflyClarityScriptObserver = new MutationObserver(function (mutations) {
+				mutations.forEach(function (mutation) {
+					mutation.addedNodes.forEach(function (node) {
+						if (node.tagName === "SCRIPT") {
+							ignoreClarityScript(node);
+							return;
+						}
+						if (node.querySelectorAll) {
+							node.querySelectorAll("script").forEach(ignoreClarityScript);
+						}
+					});
+				});
+			});
+			window.__fireflyClarityScriptObserver.observe(document.documentElement, {
+				childList: true,
+				subtree: true,
+			});
+		}
+
+		var hasClarityTag = Array.from(document.scripts).some(function (script) {
+			return isClarityScript(script);
+		});
+		var hasClarity =
+			window.__fireflyClarityInitialized ||
+			typeof window.clarity === "function" ||
+			hasClarityTag;
+
+			function loadClarity() {
+				if (!clarityId || window.__fireflyClarityInitialized) return;
+
+				window.__fireflyClarityInitialized = true;
+				(function(c,l,a,r,i,t,y){
+					c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+					t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+					t.setAttribute("data-swup-ignore-script", "");
+					y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+				})(window, document, "clarity", "script", clarityId);
+			}
+
+			function scheduleClarity() {
+				var schedule = window.requestIdleCallback || function (callback) {
+					return window.setTimeout(callback, 1);
+				};
+				schedule(loadClarity, { timeout: 5000 });
+			}
+
+			if (hasClarity) {
+				window.__fireflyClarityInitialized = true;
+			} else if (document.readyState === "complete") {
+				scheduleClarity();
+			} else {
+				window.addEventListener("load", scheduleClarity, { once: true });
+			}
+		})();
+</script>

@@ -1,0 +1,8 @@
+allowBuilds:
+  esbuild: true
+  sharp: true
+  swup: true
+  workerd: true
+
+overrides:
+  serialize-javascript: 7.0.5
